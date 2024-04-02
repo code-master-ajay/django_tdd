@@ -29,3 +29,23 @@ class TestIndexPage(TestCase):
         response = self.client.get('/')
 
         self.assertContains(response, obj.title)
+
+
+
+class DetailPageTest(TestCase):
+
+    def setup(self):
+        self.obj1 = MyModel.objects.create(title='test')
+        self.obj2 = MyModel.objects.create(title='test')
+
+    
+    def test_detail_page (self):
+        response = self.client.get(f'/detail/{self.obj1.id}')
+
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, 'detail.html')
+
+    def test_detail_page_has_list(self):
+        response = self.client.get(f'/detail/{self.obj1.id}')
+
+        self.assertContains(response, self.obj1.title)
